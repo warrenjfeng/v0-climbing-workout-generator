@@ -106,14 +106,14 @@ export function WorkoutForm({ onGenerate, isLoading }: WorkoutFormProps) {
                   key={g.value}
                   type="button"
                   onClick={() => setGoal(g.value)}
-                  className={`flex items-center gap-2 rounded-lg border-2 p-3 text-left text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2 rounded-lg border-2 p-2.5 text-left text-xs font-medium transition-all ${
                     goal === g.value
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-border bg-card text-foreground hover:border-primary/50 hover:bg-muted"
                   }`}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
-                  <span>{g.label}</span>
+                  <span className="leading-tight">{g.label}</span>
                 </button>
               );
             })}
