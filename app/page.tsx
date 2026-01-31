@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { WorkoutForm } from "@/components/workout-form";
 import { WorkoutPlan } from "@/components/workout-plan";
-import { generateWorkoutPlan, type WorkoutDay } from "@/lib/workout-generator";
+import { type WorkoutDay } from "@/lib/workout-generator";
+import { generateAIWorkoutPlan } from "@/app/actions"; // Corrected import
 import { MountainIcon, Grip } from "lucide-react";
+import { toast } from "sonner";
 
 export interface FormData {
   level: string;
@@ -201,11 +203,20 @@ const placeholderPlan: WorkoutDay[] = [
 export default function Home() {
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutDay[]>(placeholderPlan);
   const [hasGenerated, setHasGenerated] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleGenerate = (formData: FormData) => {
-    const plan = generateWorkoutPlan(formData);
-    setWorkoutPlan(plan);
-    setHasGenerated(true);
+    startTransition(async () => {
+      const result = await generateAIWorkoutPlan(formData);
+      
+      if (result.success && result.plan) {
+        setWorkoutPlan(result.plan);
+        setHasGenerated(true);
+        toast.success("Workout plan generated successfully!");
+      } else {
+        toast.error(result.error || "Failed to generate workout plan. Please try again.");
+      }
+    });
   };
 
   return (
@@ -249,7 +260,7 @@ export default function Home() {
         <div className="grid gap-8 lg:grid-cols-[400px_1fr]">
           {/* Form Section */}
           <div className="lg:sticky lg:top-8 lg:self-start">
-            <WorkoutForm onGenerate={handleGenerate} />
+            <WorkoutForm onGenerate={handleGenerate} isLoading={isPending} />
           </div>
 
           {/* Results Section */}
@@ -257,6 +268,7 @@ export default function Home() {
             <WorkoutPlan
               plan={workoutPlan}
               isPlaceholder={!hasGenerated}
+              isLoading={isPending}
             />
           </div>
         </div>

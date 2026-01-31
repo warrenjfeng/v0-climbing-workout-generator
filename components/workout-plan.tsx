@@ -9,17 +9,31 @@ import {
   TrendingUp,
   Info,
   Calendar,
+  Loader2,
 } from "lucide-react";
 import type { WorkoutDay } from "@/lib/workout-generator";
 
 interface WorkoutPlanProps {
   plan: WorkoutDay[];
   isPlaceholder: boolean;
+  isLoading?: boolean;
 }
 
-export function WorkoutPlan({ plan, isPlaceholder }: WorkoutPlanProps) {
+export function WorkoutPlan({ plan, isPlaceholder, isLoading }: WorkoutPlanProps) {
   const trainingDays = plan.filter((d) => d.type === "training").length;
   const restDays = plan.filter((d) => d.type === "rest").length;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 py-20">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="mt-4 text-lg font-medium text-foreground">Generating Your Plan</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Our AI coach is creating a personalized workout...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

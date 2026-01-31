@@ -15,9 +15,11 @@ import {
 } from "@/components/ui/select";
 import { Dumbbell, Zap, Clock, Target, Sparkles } from "lucide-react";
 import type { FormData } from "@/app/page";
+import { Loader2 } from "lucide-react";
 
 interface WorkoutFormProps {
   onGenerate: (data: FormData) => void;
+  isLoading?: boolean;
 }
 
 const climbingLevels = [
@@ -42,7 +44,7 @@ const equipmentOptions = [
   { value: "gym-access", label: "Gym Access" },
 ];
 
-export function WorkoutForm({ onGenerate }: WorkoutFormProps) {
+export function WorkoutForm({ onGenerate, isLoading }: WorkoutFormProps) {
   const [level, setLevel] = useState("intermediate");
   const [goal, setGoal] = useState("finger-strength");
   const [daysPerWeek, setDaysPerWeek] = useState([4]);
@@ -166,10 +168,20 @@ export function WorkoutForm({ onGenerate }: WorkoutFormProps) {
         <Button
           onClick={handleSubmit}
           size="lg"
+          disabled={isLoading}
           className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
         >
-          <Sparkles className="h-5 w-5" />
-          Generate My Plan
+          {isLoading ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Generating Plan...
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-5 w-5" />
+              Generate My Plan
+            </>
+          )}
         </Button>
       </CardContent>
     </Card>
