@@ -37,6 +37,15 @@ export function WorkoutPlan({ plan, isPlaceholder, isLoading }: WorkoutPlanProps
 
   return (
     <div className="space-y-6">
+      {/* Demo Mode Badge */}
+      {!isPlaceholder && (
+        <div className="flex items-center justify-center">
+          <span className="text-xs text-muted-foreground/70 bg-muted/50 px-3 py-1 rounded-full">
+            Demo Mode - Using Sample Plans
+          </span>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
